@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ai-tool-server
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ai_tool?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: your-password
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+
+office-ai:
+  libreoffice-path: ""
+
+  onlyoffice:
+    base-url: "http://localhost:8088"
+
+  public-base-url: "http://localhost:8080"
+
+  jwt:
+    secret: "replace-this-secret"
+    expire: 604800
+
+  upload:
+    path: "/tmp/uploads/"
