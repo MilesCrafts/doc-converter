@@ -1,0 +1,55 @@
+name: Java CI
+
+# 什么时候触发
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+# 要执行的任务
+jobs:
+  build:
+
+    # GitHub 提供的 Linux 环境
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1. 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 安装 JDK
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+
+      # 3. Maven 依赖缓存（加快构建）
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2
+
+      # 4. 给 Maven 执行权限
+      - name: Grant execute permission for Maven
+        run: chmod +x mvnw || true
+
+      # 5. Maven 打包
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # 6. 上传 jar 构建产物
+      - name: Upload jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: springboot-jar
+          path: target/*.jar
