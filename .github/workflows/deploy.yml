@@ -1,0 +1,43 @@
+name: ai_tool-CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ 安装 Java 环境
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+
+      # 3️⃣ Maven 打包
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # 4️⃣ 重命名 jar（固定部署文件名）
+      - name: Rename jar
+        run: cp target/ai-tool-server-1.0.0.jar ai_tool.jar
+
+      # 5️⃣ 上传 jar 到服务器
+      - name: Upload jar to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "ai_tool.jar"
+          target: "/www/wwwroot/ai_tool/"
+
+
+
