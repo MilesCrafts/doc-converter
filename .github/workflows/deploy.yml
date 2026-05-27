@@ -29,15 +29,6 @@ jobs:
       - name: Rename jar
         run: cp target/ai-tool-server-1.0.0.jar ai_tool.jar
 
-      # 5️⃣ 上传 jar 到服务器
-      - name: Upload jar to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "ai_tool.jar"
-          target: "/www/wwwroot/ai_tool/"
 
 
 
